@@ -100,7 +100,7 @@ install -d -o root -g root -m 0755 /run/sshd
 
 {
     install -o root -g root -m 0644 "$temp_file" /etc/ssh/sshd_config
-    effective_config=$("$SSHD" -T)
+    effective_config=$("$SSHD" -T | awk '{$1 = tolower($1); print}')
     if [[ $(grep '^listenaddress ' <<< "$effective_config" | cut -d: -f1 | sort -u) != "listenaddress $ts_ip" ]]; then
         printf 'Validation failed: expected only ListenAddress %s.\n' "$ts_ip" >&2
         exit 1
